@@ -12,24 +12,24 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-type_choice = [(i.upper(), i) for i in ['Gain', 'Loss']]
-sphere_choice = [(i.upper(), i) for i in ['', 'Housing', 'Food', 'Transport', 'Enjoyment', 'Deposit']]
-currency_choice = [(i.upper(), i) for i in ['usd', 'eur', 'rub']]
+type_choice = [(i, i.upper()) for i in ['Gain', 'Loss']]
+sphere_choice = [(i, i.upper()) for i in ['', 'Housing', 'Food', 'Transport', 'Enjoyment', 'Deposit']]
+currency_choice = [(i, i.upper()) for i in ['usd', 'eur', 'rub']]
 type_selected = st.selectbox(
     "Тип транзакции",
-    options=[x[1] for x in type_choice],
-    format_func=lambda x: 0 # to do
+    options=[x[0] for x in type_choice],
+    format_func=lambda x: dict(type_choice)[x]
 )
 size = st.number_input("Сумма", min_value=0.0, step=0.01)
 sphere_selected = st.selectbox(
     "Сфера",
-    options=[x[1] for x in sphere_choice],
-    format_func=lambda x: 0 # to do
+    options=[x[0] for x in sphere_choice],
+    format_func=lambda x: dict(sphere_choice)[x]
 )
 currency_selected = st.selectbox(
     "Валюта",
-    options=[x[1] for x in currency_choice],
-    format_func=lambda x: 0 # to do
+    options=[x[0] for x in currency_choice],
+    format_func=lambda x: dict(currency_choice)[x]
 )
 if st.button("Добавить транзакцию"):
     response = requests.post(
@@ -45,7 +45,7 @@ if st.button("Добавить транзакцию"):
             'currency': currency_selected.upper()
         }
     )
-    if response.status_code == 200:
+    if response.status_code == 201:
         st.success(f"Транзакция добавлена: {type_selected}, {size}, {sphere_selected}, {currency_selected}")
     else:
         st.error("Ошибка при добавлении транзакции. Пожалуйста, попробуйте еще раз.")
